@@ -4,6 +4,7 @@ import '../assets/reset.css';
 import '../assets/style.css';
 
 import LoginPage from './LoginPage';
+import SignUpPage from './SignUpPage';
 
 
 export default function App () {
@@ -11,6 +12,7 @@ export default function App () {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<LoginPage />} />
+                <Route path='/cadastro' element={<SignUpPage />} />
             </Routes>
         </BrowserRouter>
     )

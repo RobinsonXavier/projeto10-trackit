@@ -8,6 +8,8 @@ import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import Habits from './Habits';
 
+import UserContext from './Contexts/UserContext';
+
 export default function App () {
     const [user, setUser] = useState({});
     const [token, setToken] = useState('');
@@ -20,14 +22,16 @@ export default function App () {
     function getToken (response) {
         setToken(response.data.token);
     }
-
+    console.log(user);
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<LoginPage getUser={getUser} />} />
-                <Route path='/cadastro' element={<SignUpPage />} />
-                <Route path='/habitos' element={<Habits />} />
-            </Routes>
+            <UserContext.Provider value={{token, user}}>
+                <Routes>
+                    <Route path='/' element={<LoginPage getUser={getUser} />} />
+                    <Route path='/cadastro' element={<SignUpPage />} />
+                    <Route path='/habitos' element={<Habits />} />   
+                </Routes>
+            </UserContext.Provider>
         </BrowserRouter>
     )
 }

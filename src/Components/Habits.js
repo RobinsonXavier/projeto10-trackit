@@ -1,11 +1,11 @@
+import styled from "styled-components";
+
+import TopApp from "./TopApp";
 
 export default function Habits () {
     return (
         <>
-            <Top>
-                <img />
-                <img />
-            </Top>
+            <TopApp />
             <Content>
                 <div>
                     <h2></h2>
@@ -18,3 +18,7 @@ export default function Habits () {
         </>
     )
 }
+
+const Content = styled.div`
+    margin-top: 70px;
+`;

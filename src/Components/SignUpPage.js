@@ -25,7 +25,6 @@ export default function SignUpPage() {
             navigate('/');
         })
     }
-    console.log(form)
 
     return (
         <>

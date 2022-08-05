@@ -44,8 +44,8 @@ export default function LoginPage ({getUser}) {
                     <input 
                     type='password' 
                     placeholder='  senha'
-                    value={login.senha}
-                    name='senha'
+                    value={login.password}
+                    name='password'
                     onChange={handleLogin}
                     required
                      />

@@ -4,11 +4,41 @@ import styled from "styled-components";
 import TopApp from "./TopApp";
 import BottomApp from "./BottomApp";
 import Habit from './Habit';
+import Day from './Day';
 
 export default function Habits () {
     const [swap, setSwap] = useState(false);
-    const[list, setList] = useState('');
-    console.log(swap);
+    const [list, setList] = useState('');
+    const [newHabit, setNewHabit] = useState({
+        id: '',
+        name: '',
+        days: []
+    });
+    const weekDays = [
+        {
+            id:1, name:"D"
+        }, 
+        {
+            id:2, name:'S'
+        },
+        {
+            id:3, name:'T'
+        },
+        {
+            id:4, name:'Q'
+        },
+        {
+            id:5, name:'Q'
+        },
+        {
+            id:6, name:'S'
+        },
+        {
+            id:7, name:'S'
+    }];
+
+
+    console.log(newHabit)
     return (
         <>
             <TopApp />
@@ -21,13 +51,8 @@ export default function Habits () {
                     <form>
                         <input placeholder='  nome do hábito' />
                         <div>
-                            <div>D</div>
-                            <div>S</div>
-                            <div>T</div>
-                            <div>Q</div>
-                            <div>Q</div>
-                            <div>S</div>
-                            <div>S</div>
+                            {weekDays.map((day, index) => <Day key={index} number={day.id} 
+                            name={day.name} setNewHabit={setNewHabit} newHabit={newHabit} />)}
                         </div>
                         <ButtonDiv>
                             <span>Cancelar</span>
@@ -116,25 +141,9 @@ const CreateHabit = styled.div`
 
     form {
 
-
         div {
             display: flex;
             justify-content: start;
-
-            div {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 30px;
-                height: 30px;
-                border: 1px solid #D4D4D4;
-                color: #DBDBDB;
-                font-family: 'Lexend Deca', sans-serif;
-                border-radius: 5px;
-                margin: 2px;
-            }
-
-
         }
 
     }

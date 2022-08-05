@@ -1,11 +1,13 @@
-import {useNavigate, Link} from 'react-router-dom';
 import {useState} from 'react';
+import {useNavigate, Link} from 'react-router-dom';
+import axios from 'axios';
 
 import styled from 'styled-components';
 
 import logo from '../assets/images/logo.svg';
 
 export default function SignUpPage() {
+    const navigate = useNavigate();
     const [form, setForm] = useState({});
 
     function handleForm (ev) {
@@ -13,12 +15,23 @@ export default function SignUpPage() {
             ...form, [ev.target.name]: ev.target.value,
         })
     }
+
+    function signUpAccount (ev) {
+        ev.preventDefault();
+
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', form);
+
+        request.then( (response) => {
+            navigate('/');
+        })
+    }
     console.log(form)
+
     return (
         <>
             <Signup>
                 <img src={logo} alt='TrackIt logo' />
-                <form>
+                <form onSubmit={signUpAccount}>
                     <input
                     type='email' 
                     placeholder='  email'
@@ -29,22 +42,22 @@ export default function SignUpPage() {
                     <input
                     type='password' 
                     placeholder='  senha'
-                    value={form.senha}
-                    name='senha'
+                    value={form.password}
+                    name='password'
                     onChange={handleForm}
                     required />
                     <input
                     type='text' 
                     placeholder='  nome'
-                    value={form.nome}
-                    name='nome'
+                    value={form.name}
+                    name='name'
                     onChange={handleForm}
                     required />
                     <input
                     type='url' 
                     placeholder='  foto'
-                    value={form.foto}
-                    name='foto'
+                    value={form.image}
+                    name='image'
                     onChange={handleForm}
                     required />
                     <button type='submit' >Cadastrar</button>
@@ -82,7 +95,6 @@ const Signup = styled.div`
             text-align: start;
             border: 1px solid #D4D4D4;
             border-radius: 5px;
-            font-family: 'Lexend Deca', sans-serif;
             font-size: 20px;
             color: #DBDBDB;
             opacity: 0.8;
@@ -97,7 +109,6 @@ const Signup = styled.div`
             height: 45px;
             box-sizing: border-box;
             background-color: #52B6FF;
-            font-family: 'Lexend Deca', sans-serif;
             font-size: 20px;
             color: #ffffff;
             border: none;

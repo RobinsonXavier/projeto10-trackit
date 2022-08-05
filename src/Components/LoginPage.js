@@ -1,11 +1,13 @@
-import {useNavigate, Link} from 'react-router-dom';
 import {useState} from 'react';
+import {useNavigate, Link} from 'react-router-dom';
+import axios from 'axios';
 
 import styled from 'styled-components';
 
 import logo from '../assets/images/logo.svg';
 
-export default function LoginPage () {
+export default function LoginPage ({getUser}) {
+    const navigate = useNavigate();
     const[login, setLogin] = useState({});
 
     function handleLogin(ev) {
@@ -14,11 +16,23 @@ export default function LoginPage () {
         });
     }
 
+    function loginApi (ev) {
+        ev.preventDefault();
+
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', login);
+
+        request.then((response) => {
+
+            getUser(response);
+            navigate('/habitos');
+        })
+    }
+
     return (
         <>
             <Acess>
                 <img src={logo} alt='TrackIt Logo' />
-                <form>
+                <form onSubmit={loginApi}>
                     <input 
                     type='email' 
                     placeholder='  email'
@@ -70,7 +84,6 @@ const Acess = styled.div`
             text-align: start;
             border: 1px solid #D4D4D4;
             border-radius: 5px;
-            font-family: 'Lexend Deca', sans-serif;
             font-size: 20px;
             color: #DBDBDB;
             opacity: 0.8;
@@ -85,7 +98,6 @@ const Acess = styled.div`
             height: 45px;
             box-sizing: border-box;
             background-color: #52B6FF;
-            font-family: 'Lexend Deca', sans-serif;
             font-size: 20px;
             color: #ffffff;
             border: none;

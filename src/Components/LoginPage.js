@@ -60,10 +60,12 @@ export default function LoginPage ({getUser}) {
 }
 
 const Acess = styled.div`   
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #ffffff;
 
     & > img {
         width: 180px;

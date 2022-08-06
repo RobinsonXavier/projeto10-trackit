@@ -1,44 +1,54 @@
-import {useState} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import styled from "styled-components";
+import axios from 'axios';
 
 import TopApp from "./TopApp";
 import BottomApp from "./BottomApp";
 import Habit from './Habit';
 import Day from './Day';
+import UserContext from './Contexts/UserContext';
+
+import weekDays from './datas/arrays';
 
 export default function Habits () {
+    const {user} = useContext(UserContext);
     const [swap, setSwap] = useState(false);
-    const [list, setList] = useState('');
+    const [list, setList] = useState([]);
     const [newHabit, setNewHabit] = useState({
-        id: '',
         name: '',
         days: []
     });
-    const weekDays = [
-        {
-            id:1, name:"D"
-        }, 
-        {
-            id:2, name:'S'
-        },
-        {
-            id:3, name:'T'
-        },
-        {
-            id:4, name:'Q'
-        },
-        {
-            id:5, name:'Q'
-        },
-        {
-            id:6, name:'S'
-        },
-        {
-            id:7, name:'S'
-    }];
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${user.token}`
+        }
+    }
 
+    useEffect(() => {
 
-    console.log(newHabit)
+        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config);
+
+        promise.then((response) => {
+            setList([...response.data])
+        });
+        
+    }, [])
+
+    function setHabits (ev) {
+        ev.preventDefault();
+        
+        const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', newHabit, config);
+
+        request.then((response) => {
+            console.log('tudo certo!')
+        })
+
+        setNewHabit( {
+            name: '',
+            days: []
+        });
+    }
+
     return (
         <>
             <TopApp />
@@ -48,20 +58,30 @@ export default function Habits () {
                     <button onClick={() => setSwap(!swap)}>+</button>
                 </MyHabits>
                 <CreateHabit show={swap}>
-                    <form>
-                        <input placeholder='  nome do hábito' />
+                    <form onSubmit={setHabits}>
+                        <input 
+                            placeholder='  nome do hábito'
+                            type='text'
+                            value={newHabit.name}
+                            required
+                            onChange={(ev) => {
+                                setNewHabit({
+                                    ...newHabit,
+                                    name: ev.target.value
+                                })
+                            }} />
                         <div>
                             {weekDays.map((day, index) => <Day key={index} number={day.id} 
                             name={day.name} setNewHabit={setNewHabit} newHabit={newHabit} />)}
                         </div>
                         <ButtonDiv>
-                            <span>Cancelar</span>
-                            <button>Salvar</button>
+                            <span onClick={() => setSwap(!swap)}>Cancelar</span>
+                            <button type='submit'>Salvar</button>
                         </ButtonDiv>
                     </form>
                 </CreateHabit>
-                {list ? list.map(habit => 
-                <Habit />) 
+                {list.length > 0 ? list.map((habit, index) => 
+                <Habit key={index} name={habit.name} arrDays={habit.days} />) 
                 : <span>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar  trackear!</span>}
             </Content>
             <BottomApp />

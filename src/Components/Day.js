@@ -8,8 +8,13 @@ export default function Day ({name, number, setNewHabit, newHabit}) {
         <>
             <DayName validate={validate} onClick={() => {
                 if (validate) {
-                    const arr = newHabit.days;
-                    arr.pop();
+                    const arr = []
+                    for (let i = 0; i < newHabit.days.length; i++) {
+                        if(newHabit.days[i] === number) {
+                        } else {
+                            arr.push(newHabit.days[i])
+                        }   
+                    }
                     setValidate(!validate);
                     setNewHabit({
                         ...newHabit,

@@ -5,23 +5,22 @@ import styled from "styled-components";
 import trash from "../assets/images/lixeirinha.svg"
 import weekDays from "./datas/arrays";
 
-export default function Habit ({name, arrDays}) {
+export default function Habit ({name, arrDays, deleteHabits, id}) {
 
     function validateDays(number) {
         for (let i = 0; i < arrDays.length; i++) {
             if(number === arrDays[i]) {
-                console.log(true)
                 return true;
             }
         }
-        console.log(false)
         return false;
     }
+    console.log(id)
 
     return (
         <>
             <MyHabit>
-                <img src={trash} />
+                <img onClick={() => deleteHabits(id)} src={trash} alt="lixeira" />
                 <span>{name}</span>
                 <div>
                     {weekDays.map((days, index) => validateDays(days.id)

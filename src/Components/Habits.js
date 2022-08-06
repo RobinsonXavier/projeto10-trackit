@@ -14,10 +14,12 @@ export default function Habits () {
     const {user} = useContext(UserContext);
     const [swap, setSwap] = useState(false);
     const [list, setList] = useState([]);
+    const [count, setCount] = useState(0);
     const [newHabit, setNewHabit] = useState({
         name: '',
         days: []
     });
+
     const config = {
         headers: {
             'Authorization': `Bearer ${user.token}`
@@ -32,7 +34,17 @@ export default function Habits () {
             setList([...response.data])
         });
         
-    }, [])
+    }, [count]);
+
+    function deleteHabits (idHabit) {
+
+        const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${idHabit}`, config);
+
+        promise.catch(error => alert('error ' + error.message));
+        promise.then(response => {
+            setCount(list.length);
+            alert('Hábito deletado')});
+    }
 
     function setHabits (ev) {
         ev.preventDefault();
@@ -40,7 +52,8 @@ export default function Habits () {
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', newHabit, config);
 
         request.then((response) => {
-            console.log('tudo certo!')
+            setCount(list.length);
+            console.log('tudo certo!');
         })
 
         setNewHabit( {
@@ -81,7 +94,7 @@ export default function Habits () {
                     </form>
                 </CreateHabit>
                 {list.length > 0 ? list.map((habit, index) => 
-                <Habit key={index} name={habit.name} arrDays={habit.days} />) 
+                <Habit key={index} id={habit.id} deleteHabits={deleteHabits} name={habit.name} arrDays={habit.days} />) 
                 : <span>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar  trackear!</span>}
             </Content>
             <BottomApp />

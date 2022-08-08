@@ -12,8 +12,7 @@ import UserContext from './Contexts/UserContext';
 import ProgressBarContext from './Contexts/ProgressBarContext';
 import TodayHabit from './TodayHabit';
 
-export default function Today () {
-
+export default function Today ({setPercentage}) {
     const {user} = useContext(UserContext);
     const [weekDay, setWeekDay] = useState('');
     const [todayHabit, setTodayHabit] = useState([]);
@@ -73,7 +72,6 @@ export default function Today () {
         promise.catch(error => alert(`Ocorreu um erro ${error.message}`))
 
         promise.then((response) => {
-            console.log(response)
             setTodayHabit(response.data);
         })
         
@@ -107,10 +105,9 @@ export default function Today () {
         checks = (checks/todayHabit.length) * 100;
 
         setFinalCheck(checks)
+        setPercentage(checks)
     }
     
-
-    console.log(finalCheck)
     return (
         <>
             <TopApp />
@@ -126,9 +123,8 @@ export default function Today () {
                 highestSequence={habit.highestSequence} getTodayHabit={getTodayHabit} uncheckHabit={uncheckHabit} checkHabit={checkHabit} done={habit.done} />) 
                 : <h2>Carregando...</h2>}
             </TodayPage>
-            <ProgressBarContext.Provider value={{finalCheck}}>
-                <BottomApp />
-            </ProgressBarContext.Provider>
+            <BottomApp />
+
             
         </>
     )

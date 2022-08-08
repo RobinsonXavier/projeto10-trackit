@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,6 +11,13 @@ export default function LoginPage ({getUser}) {
     const navigate = useNavigate();
     const [login, setLogin] = useState({});
     const [wait, setWait] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => {
+        if(wait) {
+            setWait(!wait)
+        }
+    }, [refresh])
 
     function handleLogin(ev) {
         setLogin({
@@ -23,6 +30,12 @@ export default function LoginPage ({getUser}) {
 
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', login);
         setWait(!wait)
+
+        request.catch( error => {
+            getErro(error)
+            setRefresh(!refresh);
+        });
+
         request.then((response) => {
 
             getUser(response);
@@ -31,6 +44,10 @@ export default function LoginPage ({getUser}) {
         })
     }
 
+    function getErro (element) {
+        alert(`Erro ao conectar, verefique se o login/senha estão corresto (${element.message})`);        
+    }
+        
     return (
         <>
             <Acess>
@@ -78,7 +95,7 @@ export default function LoginPage ({getUser}) {
                      />}
                     
                     {wait 
-                    ? <button disabled type='submit' ><ThreeDots color="#ffffff" height={80} width={80} /></button> 
+                    ? <DisabledButton disabled type='submit' putopacity={wait} ><ThreeDots color="#ffffff" height={80} width={80} /></DisabledButton> 
                     : <button type='submit' >Entrar</button>}
                     <Link to='/cadastro'>
                         <span>Não tem uma conta ? Cadastre-se</span>
@@ -147,4 +164,8 @@ const Acess = styled.div`
     }
 
 
+`;
+
+const DisabledButton = styled.button`
+    opacity: 0.6 !important;
 `;

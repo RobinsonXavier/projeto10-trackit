@@ -1,14 +1,23 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import axios from 'axios';
 
 import styled from 'styled-components';
+import { ThreeDots } from  'react-loader-spinner';
 
 import logo from '../assets/images/logo.svg';
 
 export default function SignUpPage() {
     const navigate = useNavigate();
     const [form, setForm] = useState({});
+    const [wait, setWait] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => {
+        if(wait) {
+            setWait(!wait)
+        }
+    }, [refresh])
 
     function handleForm (ev) {
         setForm({
@@ -21,6 +30,13 @@ export default function SignUpPage() {
 
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up', form);
 
+        setWait(!wait);
+
+        request.catch(error => {
+            alert(`preencha os dados corretamento (${error.message})`)
+            setRefresh(!refresh)
+        })
+
         request.then( (response) => {
             navigate('/');
         })
@@ -31,6 +47,17 @@ export default function SignUpPage() {
             <Signup>
                 <img src={logo} alt='TrackIt logo' />
                 <form onSubmit={signUpAccount}>
+                    {wait 
+                    ?
+                    <input
+                    disabled
+                    type='email' 
+                    placeholder='  email'
+                    value={form.email}
+                    name='email'
+                    onChange={handleForm}
+                    required />
+                    :
                     <input
                     type='email' 
                     placeholder='  email'
@@ -38,6 +65,19 @@ export default function SignUpPage() {
                     name='email'
                     onChange={handleForm}
                     required />
+                    }
+                   
+                    {wait 
+                    ?
+                    <input
+                    disabled
+                    type='password' 
+                    placeholder='  senha'
+                    value={form.password}
+                    name='password'
+                    onChange={handleForm}
+                    required />
+                    :
                     <input
                     type='password' 
                     placeholder='  senha'
@@ -45,6 +85,19 @@ export default function SignUpPage() {
                     name='password'
                     onChange={handleForm}
                     required />
+                    }
+                   
+                    {wait 
+                    ?
+                    <input
+                    disabled
+                    type='text' 
+                    placeholder='  nome'
+                    value={form.name}
+                    name='name'
+                    onChange={handleForm}
+                    required />
+                    :
                     <input
                     type='text' 
                     placeholder='  nome'
@@ -52,6 +105,19 @@ export default function SignUpPage() {
                     name='name'
                     onChange={handleForm}
                     required />
+                    }
+                    
+                    {wait 
+                    ?
+                    <input
+                    disabled
+                    type='url' 
+                    placeholder='  foto'
+                    value={form.image}
+                    name='image'
+                    onChange={handleForm}
+                    required />
+                    :
                     <input
                     type='url' 
                     placeholder='  foto'
@@ -59,7 +125,12 @@ export default function SignUpPage() {
                     name='image'
                     onChange={handleForm}
                     required />
-                    <button type='submit' >Cadastrar</button>
+                    }
+                    
+                    {wait 
+                    ? <DisabledButton disabled type='submit' ><ThreeDots color="#ffffff" height={80} width={80} /></DisabledButton>
+                    : <button type='submit' >Cadastrar</button> }
+
                     <Link to='/'>
                         <span>Já tem uma conta? Faça login!</span>
                     </Link>
@@ -122,4 +193,11 @@ const Signup = styled.div`
         }
 
     }
+`;
+
+const DisabledButton = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.6;
 `;

@@ -7,17 +7,19 @@ import BottomApp from "./BottomApp";
 import Habit from './Habit';
 import Day from './Day';
 import UserContext from './Contexts/UserContext';
+import ProgressBarContext from './Contexts/ProgressBarContext';
 import { ThreeDots } from  'react-loader-spinner'
 
 
 import weekDays from './datas/data';
 
-export default function Habits () {
+export default function Habits ({percentage}) {
     const {user} = useContext(UserContext);
     const [swap, setSwap] = useState(false);
     const [list, setList] = useState([]);
     const [count, setCount] = useState(0);
     const [wait2, setWait2] = useState(false);
+    const [percentageHabits, setPercentageHabits] = useState(0);
     const [newHabit, setNewHabit] = useState({
         name: '',
         days: []
@@ -28,6 +30,10 @@ export default function Habits () {
             'Authorization': `Bearer ${user.token}`
         }
     }
+
+    useEffect(() => {
+        setPercentageHabits(percentage);
+    },[]);
 
     useEffect(() => {
 
@@ -46,12 +52,17 @@ export default function Habits () {
 
     function deleteHabits (idHabit) {
 
-        const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${idHabit}`, config);
+        const check = window.confirm("Está certo disso ?");
 
-        promise.catch(error => alert('error ' + error.message));
-        promise.then(response => {
-            setCount(list.length);
-            alert('Hábito deletado')});
+        if (check) {
+            const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${idHabit}`, config);
+
+                promise.catch(error => alert('error ' + error.message));
+                promise.then(response => {
+                    setCount(list.length);
+                    alert('Hábito deletado')});
+        }
+        
     }
 
     function setHabits (ev) {
@@ -72,13 +83,13 @@ export default function Habits () {
         
         request.then((response) => {
             setCount(list.length);
+            setSwap(!swap)
             console.log('tudo certo!');
         })
 
         setNewHabit({...obj});
     }
 
-    console.log(wait2);
     return (
         <>
             <TopApp />
@@ -123,7 +134,7 @@ export default function Habits () {
                         <ButtonDiv>
                             <span onClick={() => setSwap(!swap)}>Cancelar</span>
                             {wait2 
-                            ? <button disabled type='submit'><ThreeDots color="#ffffff" height={45} width={45} /></button>
+                            ? <DisabledButton disabled type='submit'><ThreeDots color="#ffffff" height={45} width={45} /></DisabledButton>
                             : <button type='submit'>Salvar</button>}
                             
                         </ButtonDiv>
@@ -134,6 +145,7 @@ export default function Habits () {
                 : <span>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar  trackear!</span>}
             </Content>
             <BottomApp />
+
         </>
     )
 }
@@ -243,4 +255,8 @@ const ButtonDiv = styled.div`
         border-radius: 5px;
         margin-left: 25px;
     }
+`;
+
+const DisabledButton = styled.button`
+    opacity: 0.6;
 `;

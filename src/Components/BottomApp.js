@@ -8,7 +8,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function BottomApp () {
-    const {finalCheck} = useContext(ProgressBarContext);
+    const {percentage} = useContext(ProgressBarContext);
     return (
         <> 
             <Bottom>
@@ -17,7 +17,7 @@ export default function BottomApp () {
                 </Link>
                 <Link to='/hoje' >
                     <Divcircle>
-                        <CircularProgressbar value={finalCheck} text={`Hoje`} />
+                        <CircularProgressbar value={percentage} text={`Hoje`} />
                     </Divcircle>
                 </Link>
                 <Link to='/historico' >

@@ -3,17 +3,18 @@ import styled from "styled-components";
 import TopApp from "./TopApp";
 import BottomApp from "./BottomApp";
 
-export default function Historic () {
+export default function Historic ({percentage}) {
     return (
         <>
         <TopApp />
-          <HistoricPage>
-                <div>
-                    <h2>Histórico</h2>
-                </div>
-                <span> Em breve você poderá ver o histórico dos seus hábitos aqui!</span>
-          </HistoricPage>
-          <BottomApp />
+        <HistoricPage>
+            <div>
+                <h2>Histórico</h2>
+            </div>
+            <span> Em breve você poderá ver o histórico dos seus hábitos aqui!</span>
+        </HistoricPage>
+        <BottomApp />
+
         </>
     )
 }

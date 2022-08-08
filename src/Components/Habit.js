@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import styled from "styled-components";
 
 import trash from "../assets/images/lixeirinha.svg"
-import weekDays from "./datas/arrays";
+import weekDays from "./datas/data";
 
 export default function Habit ({name, arrDays, deleteHabits, id}) {
 
@@ -15,7 +15,6 @@ export default function Habit ({name, arrDays, deleteHabits, id}) {
         }
         return false;
     }
-    console.log(id)
 
     return (
         <>
@@ -23,7 +22,7 @@ export default function Habit ({name, arrDays, deleteHabits, id}) {
                 <img onClick={() => deleteHabits(id)} src={trash} alt="lixeira" />
                 <span>{name}</span>
                 <div>
-                    {weekDays.map((days, index) => validateDays(days.id)
+                    {weekDays.map((days, index) => validateDays(days.id -1)
                     ? <Selected key ={index}>{days.name}</Selected>  
                     : <div key={index} >{days.name}</div>)}
                 </div>
@@ -52,6 +51,7 @@ const MyHabit = styled.div`
         margin-left: 10px;
         margin-top: 10px;
         margin-bottom: 5px;
+        margin-right: 15px;
     }
 
     div {

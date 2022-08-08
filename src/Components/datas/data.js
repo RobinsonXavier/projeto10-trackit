@@ -1,5 +1,5 @@
 
- const weekDays = [
+const weekDays = [
     {
         id:1, name:"D"
     }, 

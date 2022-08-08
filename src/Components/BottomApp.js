@@ -9,7 +9,7 @@ export default function BottomApp () {
                 <Link to='/habitos' >
                     <Divbar>Hábitos</Divbar> 
                 </Link>
-                <Link to='/habitos' >
+                <Link to='/hoje' >
                     <Divcircle><span>Hoje</span>
                             <div>
                                 <div></div>

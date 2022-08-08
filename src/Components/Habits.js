@@ -8,7 +8,7 @@ import Habit from './Habit';
 import Day from './Day';
 import UserContext from './Contexts/UserContext';
 
-import weekDays from './datas/arrays';
+import weekDays from './datas/data';
 
 export default function Habits () {
     const {user} = useContext(UserContext);
@@ -31,7 +31,8 @@ export default function Habits () {
         const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config);
 
         promise.then((response) => {
-            setList([...response.data])
+            setList([...response.data]);
+            setCount(list.length);
         });
         
     }, [count]);
@@ -51,6 +52,8 @@ export default function Habits () {
         
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', newHabit, config);
 
+        request.catch(error => alert(`aconteceu um erro: ${error.message}`))
+        
         request.then((response) => {
             setCount(list.length);
             console.log('tudo certo!');
@@ -84,7 +87,7 @@ export default function Habits () {
                                 })
                             }} />
                         <div>
-                            {weekDays.map((day, index) => <Day key={index} number={day.id} 
+                            {weekDays.map((day, index) => <Day key={index} count={count} number={index} 
                             name={day.name} setNewHabit={setNewHabit} newHabit={newHabit} />)}
                         </div>
                         <ButtonDiv>

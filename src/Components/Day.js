@@ -1,9 +1,14 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 import styled from "styled-components";
 
-export default function Day ({name, number, setNewHabit, newHabit}) {
+export default function Day ({name, number, setNewHabit, newHabit, count}) {
     const [validate, setValidate] = useState(false);
+
+    useEffect(() => {
+        setValidate(false);
+    },[count])
+    
     return (
         <>
             <DayName validate={validate} onClick={() => {

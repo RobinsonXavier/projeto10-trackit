@@ -7,8 +7,10 @@ import '../assets/style.css';
 import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import Habits from './Habits';
+import Today from './Today';
 
 import UserContext from './Contexts/UserContext';
+
 
 export default function App () {
     const [user, setUser] = useState({});
@@ -29,7 +31,8 @@ export default function App () {
                 <Routes>
                     <Route path='/' element={<LoginPage getUser={getUser} />} />
                     <Route path='/cadastro' element={<SignUpPage />} />
-                    <Route path='/habitos' element={<Habits />} />   
+                    <Route path='/habitos' element={<Habits />} /> 
+                    <Route path='/hoje' element={<Today />} />   
                 </Routes>
             </UserContext.Provider>
         </BrowserRouter>

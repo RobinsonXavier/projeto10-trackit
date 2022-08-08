@@ -9,9 +9,11 @@ import BottomApp from "./BottomApp";
 import { useEffect } from "react";
 
 import UserContext from './Contexts/UserContext';
+import ProgressBarContext from './Contexts/ProgressBarContext';
 import TodayHabit from './TodayHabit';
 
 export default function Today () {
+
     const {user} = useContext(UserContext);
     const [weekDay, setWeekDay] = useState('');
     const [todayHabit, setTodayHabit] = useState([]);
@@ -124,7 +126,10 @@ export default function Today () {
                 highestSequence={habit.highestSequence} getTodayHabit={getTodayHabit} uncheckHabit={uncheckHabit} checkHabit={checkHabit} done={habit.done} />) 
                 : <h2>Carregando...</h2>}
             </TodayPage>
-            <BottomApp />
+            <ProgressBarContext.Provider value={{finalCheck}}>
+                <BottomApp />
+            </ProgressBarContext.Provider>
+            
         </>
     )
 }

@@ -1,8 +1,14 @@
+import { useContext } from 'react';
 import {Link} from 'react-router-dom';
 
 import styled from "styled-components";
+import ProgressBarContext from './Contexts/ProgressBarContext';
+import { CircularProgressbar } from 'react-circular-progressbar';
+
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function BottomApp () {
+    const {finalCheck} = useContext(ProgressBarContext);
     return (
         <> 
             <Bottom>
@@ -10,10 +16,8 @@ export default function BottomApp () {
                     <Divbar>Hábitos</Divbar> 
                 </Link>
                 <Link to='/hoje' >
-                    <Divcircle><span>Hoje</span>
-                            <div>
-                                <div></div>
-                            </div>
+                    <Divcircle>
+                        <CircularProgressbar value={finalCheck} text={`Hoje`} />
                     </Divcircle>
                 </Link>
                 <Link to='/historico' >
@@ -67,14 +71,6 @@ const Divcircle = styled.div`
         background-color: #ffffff;
         border-radius: 50%;
 
-    }
-
-    & > div > div {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background-color: #52B6FF;
     }
 
     & > span {

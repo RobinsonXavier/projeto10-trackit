@@ -15,6 +15,7 @@ export default function Today () {
     const {user} = useContext(UserContext);
     const [weekDay, setWeekDay] = useState('');
     const [todayHabit, setTodayHabit] = useState([]);
+    const [finalCheck, setFinalCheck] = useState(0);
     let now = dayjs();
     let day = now.date();
     let month = now.month() + 1;
@@ -28,17 +29,17 @@ export default function Today () {
 
     useEffect(() => {
 
-        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config);
-
-        promise.catch(error => alert(`Ocorreu um erro ${error.message}`))
-
-        promise.then((response) => {
-            console.log(response)
-            setTodayHabit(response.data);
-        })
+        getTodayHabit()
+        
     },[])
 
-    useEffect(( )=> {
+    useEffect(() => {
+
+        checkToday();
+        
+    },[todayHabit])
+
+    useEffect(()=> {
 
         if(now.day() === 0) {
             setWeekDay('Domingo');
@@ -64,20 +65,64 @@ export default function Today () {
     
     },[]);
 
+    function getTodayHabit() {
+        const promise = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config);
 
-    console.log(todayHabit)
+        promise.catch(error => alert(`Ocorreu um erro ${error.message}`))
+
+        promise.then((response) => {
+            console.log(response)
+            setTodayHabit(response.data);
+        })
+        
+    }
+
+    function checkHabit (id) {
+
+        const request = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`,{}, config);
+
+        request.catch(error => alert(`Deu algo errado: ${error.message}`));
+
+        request.then( response => console.log("Deu Tudo certo"));
+    }
+
+    function uncheckHabit (id) {
+
+        const request = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`,{}, config);
+
+        request.catch(error => alert(`Deu algo errado: ${error.message}`));
+
+        request.then( response => console.log("Deu Tudo certo"));
+    }
+
+    function checkToday () {
+        let checks= 0;
+        for (let i = 0; i < todayHabit.length; i++) {
+            if(todayHabit[i].done === true) {
+                checks = checks + 1;
+            }
+        }
+        checks = (checks/todayHabit.length) * 100;
+
+        setFinalCheck(checks)
+    }
+    
+
+    console.log(finalCheck)
     return (
         <>
             <TopApp />
             <TodayPage>
                 <MyDay>
                     <h2>{day < 10 ? `${weekDay}, 0${day}/${month}` : `${weekDay}, ${day}/${month}`}</h2>
-                    <p>Nenhum hábito concluído ainda</p>
+                    {finalCheck === 0  || isNaN(finalCheck) 
+                    ? <p>Nenhum hábito concluído ainda</p> 
+                    : <Percentage confirmed={finalCheck}>{finalCheck.toFixed(0)}% dos hábitos concluídos</Percentage>}
                 </MyDay>
                 {todayHabit.length > 0 
-                ? todayHabit.map((habit, index) => <TodayHabit key={index} name={habit.name} currentSequence={habit.currentSequence} 
-                highestSequence={habit.highestSequence} done={habit.done} />) 
-                : "Não tem hábitos por hoje."}
+                ? todayHabit.map((habit, index) => <TodayHabit key={index} name={habit.name} id={habit.id} currentSequence={habit.currentSequence} 
+                highestSequence={habit.highestSequence} getTodayHabit={getTodayHabit} uncheckHabit={uncheckHabit} checkHabit={checkHabit} done={habit.done} />) 
+                : "Carregando..."}
             </TodayPage>
             <BottomApp />
         </>
@@ -112,7 +157,11 @@ const MyDay = styled.div`
     p{
         font-family: 'Lexend Deca', sans-serif;
         font-size: 18px;
-        color: #BABABA;
+        color: #bababa;
         margin-top: 2px;
     }
+`;
+
+const Percentage = styled.p`
+    color: #8FC549 !important;
 `;

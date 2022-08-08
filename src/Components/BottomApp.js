@@ -16,7 +16,7 @@ export default function BottomApp () {
                             </div>
                     </Divcircle>
                 </Link>
-                <Link to='/habitos' >
+                <Link to='/historico' >
                         <Divbar>Histórico</Divbar> 
                 </Link>
             </Bottom>

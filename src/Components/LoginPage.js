@@ -5,10 +5,12 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 import logo from '../assets/images/logo.svg';
+import { ThreeDots } from  'react-loader-spinner';
 
 export default function LoginPage ({getUser}) {
     const navigate = useNavigate();
-    const[login, setLogin] = useState({});
+    const [login, setLogin] = useState({});
+    const [wait, setWait] = useState(false);
 
     function handleLogin(ev) {
         setLogin({
@@ -20,11 +22,12 @@ export default function LoginPage ({getUser}) {
         ev.preventDefault();
 
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', login);
-
+        setWait(!wait)
         request.then((response) => {
 
             getUser(response);
-            navigate('/habitos');
+            navigate('/hoje');
+            setWait(!wait)
         })
     }
 
@@ -33,7 +36,10 @@ export default function LoginPage ({getUser}) {
             <Acess>
                 <img src={logo} alt='TrackIt Logo' />
                 <form onSubmit={loginApi}>
-                    <input 
+                    {wait 
+                    ?
+                    <input
+                    disabled 
                     type='email' 
                     placeholder='  email'
                     value={login.email}
@@ -41,6 +47,27 @@ export default function LoginPage ({getUser}) {
                     onChange={handleLogin}
                     required
                     />
+                    :
+                    <input 
+                    type='email' 
+                    placeholder='  email'
+                    value={login.email}
+                    name='email'
+                    onChange={handleLogin}
+                    required
+                    />}
+                    {wait 
+                    ?
+                    <input
+                    disabled 
+                    type='password' 
+                    placeholder='  senha'
+                    value={login.password}
+                    name='password'
+                    onChange={handleLogin}
+                    required
+                     />  
+                    : 
                     <input 
                     type='password' 
                     placeholder='  senha'
@@ -48,8 +75,11 @@ export default function LoginPage ({getUser}) {
                     name='password'
                     onChange={handleLogin}
                     required
-                     />
-                    <button type='submit' >Entrar</button>
+                     />}
+                    
+                    {wait 
+                    ? <button disabled type='submit' ><ThreeDots color="#ffffff" height={80} width={80} /></button> 
+                    : <button type='submit' >Entrar</button>}
                     <Link to='/cadastro'>
                         <span>Não tem uma conta ? Cadastre-se</span>
                     </Link>
@@ -96,6 +126,9 @@ const Acess = styled.div`
         }
 
         button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 300px;
             height: 45px;
             box-sizing: border-box;

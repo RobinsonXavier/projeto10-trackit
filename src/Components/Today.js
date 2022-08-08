@@ -122,7 +122,7 @@ export default function Today () {
                 {todayHabit.length > 0 
                 ? todayHabit.map((habit, index) => <TodayHabit key={index} name={habit.name} id={habit.id} currentSequence={habit.currentSequence} 
                 highestSequence={habit.highestSequence} getTodayHabit={getTodayHabit} uncheckHabit={uncheckHabit} checkHabit={checkHabit} done={habit.done} />) 
-                : "Carregando..."}
+                : <h2>Carregando...</h2>}
             </TodayPage>
             <BottomApp />
         </>

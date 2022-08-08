@@ -7,6 +7,8 @@ import BottomApp from "./BottomApp";
 import Habit from './Habit';
 import Day from './Day';
 import UserContext from './Contexts/UserContext';
+import { ThreeDots } from  'react-loader-spinner'
+
 
 import weekDays from './datas/data';
 
@@ -15,6 +17,7 @@ export default function Habits () {
     const [swap, setSwap] = useState(false);
     const [list, setList] = useState([]);
     const [count, setCount] = useState(0);
+    const [wait2, setWait2] = useState(false);
     const [newHabit, setNewHabit] = useState({
         name: '',
         days: []
@@ -33,9 +36,13 @@ export default function Habits () {
         promise.then((response) => {
             setList([...response.data]);
             setCount(list.length);
+            if(wait2) {
+                setWait2(!wait2);
+            }
         });
         
     }, [count]);
+
 
     function deleteHabits (idHabit) {
 
@@ -49,22 +56,29 @@ export default function Habits () {
 
     function setHabits (ev) {
         ev.preventDefault();
+
+        const obj = {
+            name: '',
+            days: []
+        };
         
         const request = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', newHabit, config);
 
-        request.catch(error => alert(`aconteceu um erro: ${error.message}`))
+        setWait2(!wait2);
+
+        request.catch(error => {
+            alert(`aconteceu um erro: ${error.message}`)
+        })
         
         request.then((response) => {
             setCount(list.length);
             console.log('tudo certo!');
         })
 
-        setNewHabit( {
-            name: '',
-            days: []
-        });
+        setNewHabit({...obj});
     }
 
+    console.log(wait2);
     return (
         <>
             <TopApp />
@@ -75,7 +89,10 @@ export default function Habits () {
                 </MyHabits>
                 <CreateHabit show={swap}>
                     <form onSubmit={setHabits}>
-                        <input 
+                        {wait2 
+                        ?
+                        <input
+                            disabled
                             placeholder='  nome do hábito'
                             type='text'
                             value={newHabit.name}
@@ -85,14 +102,30 @@ export default function Habits () {
                                     ...newHabit,
                                     name: ev.target.value
                                 })
-                            }} />
+                            }} /> 
+                            :
+                            <input 
+                            placeholder='  nome do hábito'
+                            type='text'
+                            value={newHabit.name}
+                            required
+                            onChange={(ev) => {
+                                setNewHabit({
+                                    ...newHabit,
+                                    name: ev.target.value
+                                })
+                            }} />}
+                        
                         <div>
                             {weekDays.map((day, index) => <Day key={index} count={count} number={index} 
                             name={day.name} setNewHabit={setNewHabit} newHabit={newHabit} />)}
                         </div>
                         <ButtonDiv>
                             <span onClick={() => setSwap(!swap)}>Cancelar</span>
-                            <button type='submit'>Salvar</button>
+                            {wait2 
+                            ? <button disabled type='submit'><ThreeDots color="#ffffff" height={45} width={45} /></button>
+                            : <button type='submit'>Salvar</button>}
+                            
                         </ButtonDiv>
                     </form>
                 </CreateHabit>
@@ -198,6 +231,9 @@ const ButtonDiv = styled.div`
     }
 
     button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 84px;
         height: 35px;
         font-family: 'Lexend Deca', sans-serif;

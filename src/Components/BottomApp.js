@@ -5,7 +5,6 @@ import styled from "styled-components";
 import ProgressBarContext from './Contexts/ProgressBarContext';
 import { CircularProgressbar } from 'react-circular-progressbar';
 
-import 'react-circular-progressbar/dist/styles.css';
 
 export default function BottomApp () {
     const {percentage} = useContext(ProgressBarContext);
